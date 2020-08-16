@@ -6,7 +6,7 @@ sudo npm install npm@5.6.0 -g
 
 # Updating nodejs
 sudo npm install -g n
-n stable
+sudo n stable
 node --version
 
 # Setting up docker configuration
