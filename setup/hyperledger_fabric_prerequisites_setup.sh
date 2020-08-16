@@ -1,3 +1,4 @@
+sudo apt-get update
 sudo apt-get install curl git docker.io docker-compose nodejs npm python
 
 # Updating npm to 5.6.0
