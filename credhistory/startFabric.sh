@@ -12,7 +12,7 @@ export MSYS_NO_PATHCONV=1
 starttime=$(date +%s)
 CC_SRC_LANGUAGE="typescript"
 CC_SRC_LANGUAGE=`echo "$CC_SRC_LANGUAGE" | tr [:upper:] [:lower:]`
-CC_SRC_PATH="./chaincode/
+CC_SRC_PATH="./chaincode/"
 
 
 # clean out any old identites in the wallets
