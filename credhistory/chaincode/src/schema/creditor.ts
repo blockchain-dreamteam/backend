@@ -57,6 +57,6 @@ export default class Creditor implements Entity {
 
     // tslint:disable-next-line:member-ordering
     public static make_key(stateRegistrationNumber: string): string {
-        return `${this.DOCTYPE}:${stateRegistrationNumber}`;
+        return `${Creditor.DOCTYPE}:${stateRegistrationNumber}`;
     }
 }

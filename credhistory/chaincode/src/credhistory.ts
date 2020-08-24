@@ -109,16 +109,15 @@ export class CredHistory extends Contract {
                                creditorRegNumber: string,
                                passport: string,
                                aim: string,
-                               targetValue: string,
-                               requested: string) {
+                               targetValue: string) {
         console.info('============= START : Create Request ===========');
-
+        const now: Date = new Date();
         const request: Request = new Request(
             Creditor.make_key(creditorRegNumber),
             Borrower.make_key(passport),
             aim,
             targetValue,
-            requested,
+            `${now}-${now.getMonth()}-${now.getFullYear()}`,
         );
 
         await ctx.stub.putState(request.key(), request.as_bytes());
