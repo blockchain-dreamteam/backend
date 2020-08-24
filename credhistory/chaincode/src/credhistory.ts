@@ -69,7 +69,7 @@ export class CredHistory extends Contract {
                             (idx + 1) % 10 === 6 ? 'A' : (idx + 1) % 10,
                         ),
                         new Payment(
-                            (idx - 1) % 10 === 6 ? 'A' : (idx - 1) % 10,
+                            (idx + 2) % 10 === 6 ? 'A' : (idx + 2) % 10,
                         ),
                     ],
                 );

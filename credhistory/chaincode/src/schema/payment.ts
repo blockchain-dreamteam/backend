@@ -22,7 +22,7 @@ export default class Payment {
 
     public constructor(code: number | string) {
         if (!Payment.converter.has(code)) {
-            throw new Error(`Неизвестный код платежа ${code}, определены: ${Payment.converter.keys()}`);
+            throw new Error(`Неизвестный код платежа ${code}, определены: ${Payment.converter.keys().toString()}`);
         }
         this.type = Payment.converter.get(code);
     }
