@@ -8,7 +8,7 @@ export default class Account implements Entity {
     private static readonly DOCTYPE = 'account';
 
     // tslint:disable-next-line:variable-name
-    private readonly _id: string;
+    private readonly docKey: string;
     private readonly docType: string;
     private readonly creditorKey: string;
     private readonly borrowerKey: string;
@@ -54,7 +54,7 @@ export default class Account implements Entity {
                        status: string,
                        payments: Payment[]) {
         this.docType = Account.DOCTYPE;
-        this._id = Account.make_key(creditorKey, borrowerKey, opened);
+        this.docKey = Account.make_key(creditorKey, borrowerKey, opened);
         this.creditorKey = creditorKey;
         this.borrowerKey = borrowerKey;
         this.type = type;
@@ -66,7 +66,7 @@ export default class Account implements Entity {
     }
 
     public key(): string {
-        return this._id;
+        return this.docKey;
     }
 
     public as_bytes(): Uint8Array {

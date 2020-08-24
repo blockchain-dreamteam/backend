@@ -11,7 +11,7 @@ export default class Creditor implements Entity {
      * @private
      */
     // tslint:disable-next-line:variable-name
-    private _id: string;
+    private docKey: string;
 
     private docType: string;
 
@@ -40,7 +40,7 @@ export default class Creditor implements Entity {
                        INN: string,
                        OKPO: string) {
         this.docType = Creditor.DOCTYPE;
-        this._id = Creditor.make_key(stateRegistrationNumber);
+        this.docKey = Creditor.make_key(stateRegistrationNumber);
         this.fullName = fullName;
         this.stateRegistrationNumber = stateRegistrationNumber;
         this.INN = INN;
@@ -48,7 +48,7 @@ export default class Creditor implements Entity {
     }
 
     public key(): string {
-        return this._id;
+        return this.docKey;
     }
 
     public as_bytes(): Uint8Array {

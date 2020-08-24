@@ -8,7 +8,7 @@ export default class Request implements Entity {
     private static readonly DOCTYPE = 'request';
 
     // tslint:disable-next-line:variable-name
-    private readonly _id: string;
+    private readonly docKey: string;
     private readonly docType: string;
     private readonly creditorKey: string;
     private readonly borrowerKey: string;
@@ -23,7 +23,7 @@ export default class Request implements Entity {
                 targetValue: string,
                 requested: string) {
         this.docType = Request.DOCTYPE;
-        this._id = Request.make_key(creditorKey, borrowerKey, requested);
+        this.docKey = Request.make_key(creditorKey, borrowerKey, requested);
         this.creditorKey = creditorKey;
         this.borrowerKey = borrowerKey;
         this.aim = aim;
@@ -32,7 +32,7 @@ export default class Request implements Entity {
     }
 
     public key(): string {
-        return this._id;
+        return this.docKey;
     }
 
     public as_bytes(): Uint8Array {

@@ -12,7 +12,7 @@ export default class Borrower implements Entity {
      * @private
      */
     // tslint:disable-next-line:variable-name
-    private readonly _id: string;
+    private readonly docKey: string;
 
     private readonly docType: string;
 
@@ -83,7 +83,7 @@ export default class Borrower implements Entity {
         ];
 
         this.docType = Borrower.DOCTYPE;
-        this._id = Borrower.make_key(passport);
+        this.docKey = Borrower.make_key(passport);
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymicName = patronymicName;
@@ -107,7 +107,7 @@ export default class Borrower implements Entity {
     }
 
     public key(): string {
-        return this._id;
+        return this.docKey;
     }
 
     public as_bytes(): Uint8Array {
