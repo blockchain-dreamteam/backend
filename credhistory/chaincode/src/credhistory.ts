@@ -137,7 +137,7 @@ export class CredHistory extends Contract {
             userMail,
             aim,
             targetValue,
-            `${now}-${now.getMonth()}-${now.getFullYear()}`,
+            `${now.getDay()}-${now.getMonth()}-${now.getFullYear()}`,
         );
 
         const requestAsBytes = request.as_bytes();
