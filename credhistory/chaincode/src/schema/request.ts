@@ -1,3 +1,5 @@
+import Borrower from './borrower';
+import Creditor from './creditor';
 import Entity from './entity';
 
 /**
@@ -10,22 +12,26 @@ export default class Request implements Entity {
     // tslint:disable-next-line:variable-name
     private readonly docKey: string;
     private readonly docType: string;
-    private readonly creditorKey: string;
-    private readonly borrowerKey: string;
+    private readonly creditorRegNumber: string;
+    private readonly borrowerMail: string;
 
     private readonly aim: string;
     private readonly targetValue: string;
     private readonly requested: string;
 
-    constructor(creditorKey: string,
-                borrowerKey: string,
+    constructor(creditorRegNumber: string,
+                borrowerMail: string,
                 aim: string,
                 targetValue: string,
                 requested: string) {
         this.docType = Request.DOCTYPE;
-        this.docKey = Request.make_key(creditorKey, borrowerKey, requested);
-        this.creditorKey = creditorKey;
-        this.borrowerKey = borrowerKey;
+        this.docKey = Request.make_key(
+            Creditor.make_key(creditorRegNumber),
+            Borrower.make_key(borrowerMail),
+            requested
+        );
+        this.creditorRegNumber = creditorRegNumber;
+        this.borrowerMail = borrowerMail;
         this.aim = aim;
         this.targetValue = targetValue;
         this.requested = requested;

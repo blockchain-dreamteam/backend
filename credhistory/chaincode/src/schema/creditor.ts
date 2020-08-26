@@ -47,6 +47,10 @@ export default class Creditor implements Entity {
         this.OKPO = OKPO;
     }
 
+    public get getStateRegistrationNumber(): string {
+        return this.stateRegistrationNumber;
+    }
+
     public key(): string {
         return this.docKey;
     }

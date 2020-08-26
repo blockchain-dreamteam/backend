@@ -17,7 +17,7 @@ export class CredHistory extends Contract {
         const putEntity = CredHistory.putState(ctx);
         const defaultEntities: Entity[] = [];
 
-        const defaultCreditor: Entity = new Creditor(
+        const defaultCreditor: Creditor = new Creditor(
             'DefaultBank',
             CredHistory.STRING_CONSTANT,
             CredHistory.STRING_CONSTANT,
@@ -33,7 +33,8 @@ export class CredHistory extends Contract {
             'Соловьёв Николай Евсеевич',
         ].forEach((user, idx) => {
                 const [lastName, firstName, patronymicName] = user.split(' ');
-                const borrower: Entity = new Borrower(
+                const borrower: Borrower = new Borrower(
+                    `defaul${idx}@default.ru`,
                     firstName,
                     lastName,
                     patronymicName,
@@ -44,8 +45,8 @@ export class CredHistory extends Contract {
                         'Российская Федерация',
                 );
                 const borrowerHasOpenedAccount: Entity = new Account(
-                    defaultCreditor.key(),
-                    borrower.key(),
+                    defaultCreditor.getStateRegistrationNumber,
+                    borrower.getEmail,
                     'Потребит.кредит',
                     'Личный',
                     '100000',
@@ -54,8 +55,8 @@ export class CredHistory extends Contract {
                     [new Payment(0)],
                 );
                 const borrowerHasClosedAccount: Entity = new Account(
-                    defaultCreditor.key(),
-                    borrower.key(),
+                    defaultCreditor.getStateRegistrationNumber,
+                    borrower.getEmail,
                     'Потребит.кредит',
                     'Личный',
                     '100000',
@@ -74,8 +75,8 @@ export class CredHistory extends Contract {
                     ],
                 );
                 const borrowerHasRequest: Entity = new Request(
-                    defaultCreditor.key(),
-                    borrower.key(),
+                    defaultCreditor.getStateRegistrationNumber,
+                    borrower.getEmail,
                     'Потребительский кредит',
                     '10000',
                     `${Math.max(1, now.getDay() - idx)}-${Math.max(1, now.getMonth() - idx)}-${now.getFullYear()}`,
@@ -95,33 +96,62 @@ export class CredHistory extends Contract {
         console.info('============= END : Initialize Ledger ===========');
     }
 
-    public async queryBorrower(ctx: Context, passport: string): Promise<string> {
-        const borrowerAsBytes = await ctx.stub.getState(Borrower.make_key(passport));
-        if (!borrowerAsBytes || borrowerAsBytes.length === 0) {
-            throw new Error(`Borrower with passport=${passport} does not exist`);
-        }
-        const result = borrowerAsBytes.toString();
-        console.log(result);
-        return result;
+    public async createBorrower(ctx: Context,
+                                email: string,
+                                firstName: string,
+                                lastName: string,
+                                patronymicName: string,
+                                dayOfBirth: string,
+                                placeOfBirth: string,
+                                sex: string,
+                                passport: string,
+                                citizenship: string) {
+        console.info('============= START : Create Borrower ===========');
+        const request: Borrower = new Borrower(
+            email,
+            firstName,
+            lastName,
+            patronymicName,
+            dayOfBirth,
+            placeOfBirth,
+            sex,
+            passport,
+            citizenship,
+        );
+
+        const requestAsBytes = request.as_bytes();
+        await ctx.stub.putState(request.key(), requestAsBytes);
+        console.info('============= END : Create Borrower ===========');
+        return requestAsBytes.toString();
     }
 
     public async createRequest(ctx: Context,
                                creditorRegNumber: string,
-                               passport: string,
+                               userMail: string,
                                aim: string,
-                               targetValue: string) {
+                               targetValue: string): Promise<string> {
         console.info('============= START : Create Request ===========');
         const now: Date = new Date();
         const request: Request = new Request(
-            Creditor.make_key(creditorRegNumber),
-            Borrower.make_key(passport),
+            creditorRegNumber,
+            userMail,
             aim,
             targetValue,
             `${now}-${now.getMonth()}-${now.getFullYear()}`,
         );
 
-        await ctx.stub.putState(request.key(), request.as_bytes());
+        const requestAsBytes = request.as_bytes();
+        await ctx.stub.putState(request.key(), requestAsBytes);
         console.info('============= END : Create Request ===========');
+        return requestAsBytes.toString();
+    }
+
+    public async queryAllBorrowers(ctx: Context): Promise<string> {
+        const queryString: {selector: {docType: string}} = {selector: {docType: 'borrower'}};
+
+        const result = await CredHistory.getQueryResultForQueryString(ctx, JSON.stringify(queryString));
+        console.info(result);
+        return result;
     }
 
     public async queryAllRequests(ctx: Context): Promise<string> {
@@ -132,19 +162,13 @@ export class CredHistory extends Contract {
         return result;
     }
 
-    // public async changeCarOwner(ctx: Context, carNumber: string, newOwner: string) {
-    //     console.info('============= START : changeCarOwner ===========');
-    //
-    //     const carAsBytes = await ctx.stub.getState(carNumber); // get the car from chaincode state
-    //     if (!carAsBytes || carAsBytes.length === 0) {
-    //         throw new Error(`${carNumber} does not exist`);
-    //     }
-    //     const car: Data = JSON.parse(carAsBytes.toString());
-    //     car.owner = newOwner;
-    //
-    //     await ctx.stub.putState(carNumber, Buffer.from(JSON.stringify(car)));
-    //     console.info('============= END : changeCarOwner ===========');
-    // }
+    public async queryAllAccounts(ctx: Context): Promise<string> {
+        const queryString: {selector: {docType: string}} = {selector: {docType: 'account'}};
+
+        const result = await CredHistory.getQueryResultForQueryString(ctx, JSON.stringify(queryString));
+        console.info(result);
+        return result;
+    }
 
     // tslint:disable-next-line:member-ordering
     private static async getQueryResultForQueryString(ctx: Context, queryString: string) {

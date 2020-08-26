@@ -8,13 +8,19 @@ export default class Borrower implements Entity {
     private static readonly DOCTYPE = 'borrower';
 
     /**
-     * `${this.docType}:${passport}`
+     * `${this.docType}:${email}`
      * @private
      */
     // tslint:disable-next-line:variable-name
     private readonly docKey: string;
 
     private readonly docType: string;
+
+    /**
+     * Адрес эл. почты.
+     * @private
+     */
+    private readonly email: string;
 
     /**
      * Имя.
@@ -64,7 +70,8 @@ export default class Borrower implements Entity {
      */
     private readonly citizenship: string;
 
-    public constructor(firstName: string,
+    public constructor(email: string,
+                       firstName: string,
                        lastName: string,
                        patronymicName: string,
                        dayOfBirth: string,
@@ -73,17 +80,18 @@ export default class Borrower implements Entity {
                        passport: string,
                        citizenship: string) {
         [
-            firstName, lastName, patronymicName,
+            email, firstName, lastName, patronymicName,
             dayOfBirth, placeOfBirth, sex, passport,
             citizenship,
         ] = [
-            firstName.trim(), lastName.trim(), patronymicName.trim(),
+            email.trim(), firstName.trim(), lastName.trim(), patronymicName.trim(),
             dayOfBirth.trim(), placeOfBirth.trim(), sex.trim(),
             passport.trim(), citizenship.trim(),
         ];
 
         this.docType = Borrower.DOCTYPE;
-        this.docKey = Borrower.make_key(passport);
+        this.docKey = Borrower.make_key(email);
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymicName = patronymicName;
@@ -106,6 +114,10 @@ export default class Borrower implements Entity {
         this.sex = sex;
     }
 
+    public get getEmail(): string {
+        return this.email;
+    }
+
     public key(): string {
         return this.docKey;
     }
@@ -115,7 +127,7 @@ export default class Borrower implements Entity {
     }
 
     // tslint:disable-next-line:member-ordering
-    public static make_key(passport: string): string {
-        return `${this.DOCTYPE}:${passport}`;
+    public static make_key(email: string): string {
+        return `${this.DOCTYPE}:${email}`;
     }
 }

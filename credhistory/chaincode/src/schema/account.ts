@@ -1,3 +1,5 @@
+import Borrower from './borrower';
+import Creditor from './creditor';
 import Entity from './entity';
 import Payment from './payment';
 
@@ -10,8 +12,8 @@ export default class Account implements Entity {
     // tslint:disable-next-line:variable-name
     private readonly docKey: string;
     private readonly docType: string;
-    private readonly creditorKey: string;
-    private readonly borrowerKey: string;
+    private readonly creditorRegNum: string;
+    private readonly borrowerEmail: string;
 
     /**
      * Вид.
@@ -45,8 +47,8 @@ export default class Account implements Entity {
 
     private readonly payments: Payment[];
 
-    public constructor(creditorKey: string,
-                       borrowerKey: string,
+    public constructor(creditorRegNum: string,
+                       borrowerEmail: string,
                        type: string,
                        relation: string,
                        limit: string,
@@ -54,9 +56,9 @@ export default class Account implements Entity {
                        status: string,
                        payments: Payment[]) {
         this.docType = Account.DOCTYPE;
-        this.docKey = Account.make_key(creditorKey, borrowerKey, opened);
-        this.creditorKey = creditorKey;
-        this.borrowerKey = borrowerKey;
+        this.docKey = Account.make_key(Creditor.make_key(creditorRegNum), Borrower.make_key(borrowerEmail), opened);
+        this.creditorRegNum = creditorRegNum;
+        this.borrowerEmail = borrowerEmail;
         this.type = type;
         this.relation = relation;
         this.limit = limit;
