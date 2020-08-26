@@ -34,7 +34,7 @@ export class CredHistory extends Contract {
         ].forEach((user, idx) => {
                 const [lastName, firstName, patronymicName] = user.split(' ');
                 const borrower: Borrower = new Borrower(
-                    `defaul${idx}@default.ru`,
+                    `default${idx}@default.ru`,
                     firstName,
                     lastName,
                     patronymicName,
